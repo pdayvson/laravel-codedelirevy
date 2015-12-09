@@ -12,9 +12,9 @@
 				<thead>
 					<tr>
 						<th>#</th>
-						<th>Produto</th>
-						<th>Categoria</th>
-						<th>Preço</th>
+						<th>Nome</th>
+						<th>E-mail</th>
+						<th>Telefone</th>
 						<th>Ação</th>
 					</tr>
 				</thead>
@@ -22,12 +22,11 @@
 					@foreach ($clients as $client)
 					<tr>
 						<td>{{$client->id}}</td>
-						<td>{{$client->address}}</td>
-						<td>{{$client->zipcode}}</td>
+						<td>{{$client->user->name}}</td>
+						<td>{{$client->user->email}}</td>
 						<td>{{$client->phone}}</td>
 						<td>
                             <a href="{{ route('admin.clients.edit', ['id'=> $client->id]) }}" class="btn btn-default btn-sm">Editar</a>
-                            <a href="{{ route('admin.clients.destroy', ['id'=> $client->id]) }}" class="btn btn-danger btn-sm">Remover</a>
                         </td>
 					</tr>
 					@endforeach

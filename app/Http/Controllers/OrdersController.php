@@ -3,16 +3,16 @@
 namespace CodeDelivery\Http\Controllers;
 
 use CodeDelivery\Http\Requests;
-use CodeDelivery\Http\Requests\AdminOrderRequest;
-use CodeDelivery\Repositories\CategoryRepository;
 use CodeDelivery\Repositories\OrderItemRepository;
 use CodeDelivery\Repositories\OrderRepository;
 use CodeDelivery\Repositories\ProductRepository;
+use CodeDelivery\Repositories\UserRepository;
+use Illuminate\Http\Request;
 
 class OrdersController extends Controller
 {
     /**
-     * @var CategoryRepository
+     * @var OrderRepository
      */
     private $repository;
     /**
@@ -38,29 +38,16 @@ class OrdersController extends Controller
 		return view('admin.orders.index', compact('orders'));
 	}
 
-	public function create()
-	{
-        $products = $this->productRepository->lists('name', 'id');
-		return view('admin.orders.create', compact('products'));
-	}
-
-	public function store(AdminOrderRequest $request)
-    {
-        $data = $request->all();
-        $this->repository->create($data);
-
-        return redirect()->route('admin.orders.index');
-    }
-
-    public function edit($id)
+    public function edit($id, UserRepository $userRepository)
     {
         $order = $this->repository->find($id);
-        $orderItens = $this->orderItemRepository->findByField('order_id', $id);
+        $list_status = [0 => 'Pendente', 1 => 'A caminho', 2 => 'Entregue', 3 => 'Cancelado'];
+        $deliveryman = $userRepository->getDeliverymen();
 
-        return view('admin.orders.edit', compact('order', 'orderItens'));
+        return view('admin.orders.edit', compact('order', 'list_status', 'deliveryman'));
     }
 
-    public function update(AdminOrderRequest $request, $id)
+    public function update(Request $request, $id)
     {
         $data = $request->all();
         $this->repository->update($data, $id);
@@ -68,9 +55,4 @@ class OrdersController extends Controller
         return redirect()->route('admin.orders.index');
     }
 
-    public function destroy($id)
-    {
-        $this->repository->delete($id);
-        return redirect()->route('admin.orders.index');
-    }
 }
