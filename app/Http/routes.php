@@ -79,4 +79,10 @@ Route::group(['prefix' => 'api', 'as' => 'api.', 'middleware' => 'oauth'], funct
             ];
         });
     });
+
+    Route::get('/teste', function(){
+        return [
+            'message' => 'Rota protegida por OAuth2'
+        ];
+    });
 });
